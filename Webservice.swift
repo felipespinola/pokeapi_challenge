@@ -7,32 +7,37 @@
 
 import Foundation
 import Alamofire
+import RealmSwift
 
 class Webservices {
     
-    func getAllPokemon() {
+    func getAllPokemon(completion: @escaping (Bool) -> Void) {
         
         AF.request("\(Constants.baseURL)pokemon").responseJSON { response in
             guard let data = response.data else {
                 print("No data")
+                completion(false)
                 return
             }
             
             do {
-                let result = try JSONDecoder().decode(Pokemon.MainNetworkResponse.self, from: data)
-                print(result)
+                let pokemonMainResponse = try JSONDecoder().decode(Pokemon.MainNetworkResponse.self, from: data)
+                print(pokemonMainResponse)
                 
-                for pokemon in result.results {
+                for pokemon in pokemonMainResponse.results {
                     self.getPokemon(url: pokemon.url)
                 }
                 
+                completion(true)
+                
             } catch let error {
                 print("error: \(error)")
+                completion(false)
             }
         }
     }
     
-    func getPokemon(url: String) {
+    func getPokemon(url: String){
         guard let url = URL(string: url) else {
             return
         }
@@ -43,7 +48,10 @@ class Webservices {
             }
             
             do {
-                let result = try JSONDecoder().decode(Pokemon.self, from: data)
+                let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
+                RealmSingleton.shared.realm.beginWrite()
+                RealmSingleton.shared.realm.add(pokemon, update: .all)
+                try RealmSingleton.shared.realm.commitWrite()
             } catch let error {
                 print("error: \(error)")
             }

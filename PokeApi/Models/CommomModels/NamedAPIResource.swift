@@ -13,8 +13,4 @@ struct NamedAPIResource: Decodable, Realmable {
     var name: String = ""
     //The URL of the referenced resource
     var url: String = ""
-    
-    static func primaryKey() -> String? {
-        return "id"
-    }
 }

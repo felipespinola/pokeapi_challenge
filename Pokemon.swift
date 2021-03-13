@@ -11,7 +11,7 @@ import Unrealm
 struct Pokemon: Decodable, Realmable {
     
     //The identifier for this resource
-    var id: Int = 0
+    var id: Int?
     //The name for this resource
     var name: String = ""
     //The base experience gained for defeating this Pokémon
