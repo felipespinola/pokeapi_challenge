@@ -9,4 +9,5 @@ import Foundation
 
 struct Constants {
     static let baseURL: String = "https://pokeapi.co/api/v2/"
+    static let officialArtworkBaseURL: String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"
 }
