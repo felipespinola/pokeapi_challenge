@@ -40,6 +40,11 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         //Set pokemon name
         cell.pokemonNameLabel.text = pokemons[indexPath.row].name
         
+        //Set pokemon number
+        if let id = pokemons[indexPath.row].id {
+            cell.pokemonNumberLabel.text = String(format: "Nº %03d", arguments: [id])
+        }
+        
         //Set pokemon image
         cell.pokemonImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
         if let urlString = pokemons[indexPath.row].sprites.front_default {
