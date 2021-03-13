@@ -11,12 +11,19 @@ import SDWebImage
 
 class MainViewController: UIViewController {
     
-    var pokemons: [Pokemon] = []
+    var pokemons: [Pokemon] = Array(RealmSingleton.shared.realm.objects(Pokemon.self))
     @IBOutlet weak var pokemonCollectionView: UICollectionView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        setupNavigationBar()
+        
+        
+        var search = UISearchController(searchResultsController: nil)
+        self.navigationItem.searchController = search
+        //self.navigationController?.navigationBar.prefersLargeTitles = true
         
         Webservices().getAllPokemon() { result in
             if result {
@@ -25,6 +32,20 @@ class MainViewController: UIViewController {
                 self.pokemonCollectionView.reloadData()
             }
         }
+    }
+    
+    func setupNavigationBar() {
+        let image = UIImage(named: "pokemon.png")
+        let imageView = UIImageView(image:image)
+        
+        let bannerWidth = self.navigationController?.navigationBar.frame.size.width ?? self.view.frame.width
+        let bannerHeight = self.navigationController?.navigationBar.frame.size.height ?? self.view.frame.height
+        let bannerX = bannerWidth  / 2 - (image?.size.width)! / 2
+        let bannerY = bannerHeight / 2 - (image?.size.height)! / 2
+        imageView.frame = CGRect(x: bannerX, y: bannerY, width: bannerWidth, height: bannerHeight)
+        imageView.contentMode = .scaleAspectFit
+        
+        self.navigationItem.titleView = imageView
     }
 
 }

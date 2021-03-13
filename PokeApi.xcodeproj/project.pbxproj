@@ -152,15 +152,15 @@
 		55DAC49925FD1124003EC933 /* PokeApi */ = {
 			isa = PBXGroup;
 			children = (
-				55DAC51F25FD30C5003EC933 /* Custom Cells */,
-				55DAC4EB25FD1F99003EC933 /* Utils */,
 				55DAC4DE25FD1DDF003EC933 /* AppDelegate */,
 				55DAC4D625FD1D28003EC933 /* Controllers */,
+				55DAC51F25FD30C5003EC933 /* Custom Cells */,
 				55DAC4A825FD112A003EC933 /* Info.plist */,
 				55DAC4D725FD1D38003EC933 /* Models */,
 				55DAC4E325FD1DF2003EC933 /* Resources */,
 				55DAC4D825FD1D74003EC933 /* Services */,
 				55DAC4E225FD1DE9003EC933 /* Storyboards */,
+				55DAC4EB25FD1F99003EC933 /* Utils */,
 			);
 			path = PokeApi;
 			sourceTree = "<group>";

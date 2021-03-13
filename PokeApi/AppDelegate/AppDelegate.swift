@@ -19,6 +19,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Realm.registerRealmables(Pokemon.self, NamedAPIResource.self, VersionGameIndex.self, PokemonAbility.self, PokemonHeldItem.self, PokemonHeldItemVersion.self, PokemonMove.self, PokemonMoveVersion.self, PokemonStat.self, PokemonSprites.self, PokemonType.self)
         
+        if #available(iOS 13.0, *) {
+            let navBarAppearance = UINavigationBarAppearance()
+            navBarAppearance.configureWithOpaqueBackground()
+            navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+            navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+            navBarAppearance.backgroundColor = .white
+            UINavigationBar.appearance().standardAppearance = navBarAppearance
+            UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        } else {
+            UINavigationBar.appearance().barTintColor = .white
+            UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        }
+        
         return true
     }
 
