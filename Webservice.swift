@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+class Webservices {
+    
+    func getAllPokemon(url: String) {
+        
+    }
+}
