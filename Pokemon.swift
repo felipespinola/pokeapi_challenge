@@ -61,8 +61,8 @@ extension Pokemon {
         var results: [PokemonSimpleResult]
     }
     
-    struct PokemonSimpleResult: Decodable {
-        var name: String
-        var url: String
+    struct PokemonSimpleResult: Decodable, Realmable {
+        var name: String = ""
+        var url: String = ""
     }
 }

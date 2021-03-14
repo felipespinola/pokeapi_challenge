@@ -21,8 +21,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ZjQ-4z-siZ">
-                                    <size key="itemSize" width="150" height="150"/>
-                                    <size key="estimatedItemSize" width="150" height="150"/>
+                                    <size key="itemSize" width="100" height="150"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
@@ -31,15 +30,15 @@
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PokemonSimpleCollectionViewCell" id="9B7-Yd-rTC" customClass="PokemonSimpleCollectionViewCell" customModule="PokeApi" customModuleProvider="target">
                                         <rect key="frame" x="15" y="0.0" width="100" height="150"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Eup-mQ-5pN">
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Qa9-3U-UOo">
                                             <rect key="frame" x="0.0" y="0.0" width="100" height="150"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tAx-Db-Ipi">
                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="100" id="EjP-XU-8P4"/>
-                                                        <constraint firstAttribute="width" secondItem="tAx-Db-Ipi" secondAttribute="height" multiplier="1:1" id="SoU-dN-11V"/>
+                                                        <constraint firstAttribute="height" constant="100" id="cBu-dK-lXP"/>
+                                                        <constraint firstAttribute="width" constant="100" id="rGA-KO-AOx"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="IAx-6p-J0Q">
@@ -57,16 +56,16 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="nZ7-oQ-1hP" secondAttribute="trailing" constant="5" id="MXY-OC-kHO"/>
-                                                <constraint firstItem="IAx-6p-J0Q" firstAttribute="leading" secondItem="Eup-mQ-5pN" secondAttribute="leading" constant="5" id="VBk-tG-hbJ"/>
+                                                <constraint firstItem="IAx-6p-J0Q" firstAttribute="leading" secondItem="Qa9-3U-UOo" secondAttribute="leading" constant="5" id="VBk-tG-hbJ"/>
                                                 <constraint firstAttribute="trailing" secondItem="IAx-6p-J0Q" secondAttribute="trailing" constant="5" id="XRe-cV-3Is"/>
-                                                <constraint firstItem="nZ7-oQ-1hP" firstAttribute="leading" secondItem="Eup-mQ-5pN" secondAttribute="leading" constant="5" id="aGo-as-GDg"/>
+                                                <constraint firstItem="nZ7-oQ-1hP" firstAttribute="leading" secondItem="Qa9-3U-UOo" secondAttribute="leading" constant="5" id="aGo-as-GDg"/>
                                                 <constraint firstAttribute="bottom" secondItem="nZ7-oQ-1hP" secondAttribute="bottom" constant="5" id="cnW-4e-9Q1"/>
                                                 <constraint firstItem="IAx-6p-J0Q" firstAttribute="top" secondItem="tAx-Db-Ipi" secondAttribute="bottom" constant="5" id="dp6-18-hqy"/>
                                                 <constraint firstItem="nZ7-oQ-1hP" firstAttribute="top" secondItem="IAx-6p-J0Q" secondAttribute="bottom" constant="5" id="nwk-Et-dg6"/>
                                                 <constraint firstAttribute="trailing" secondItem="tAx-Db-Ipi" secondAttribute="trailing" id="o3Q-o3-C4w"/>
-                                                <constraint firstItem="tAx-Db-Ipi" firstAttribute="leading" secondItem="Eup-mQ-5pN" secondAttribute="leading" id="pfc-iu-0T3"/>
+                                                <constraint firstItem="tAx-Db-Ipi" firstAttribute="leading" secondItem="Qa9-3U-UOo" secondAttribute="leading" id="pfc-iu-0T3"/>
                                                 <constraint firstAttribute="bottom" secondItem="tAx-Db-Ipi" secondAttribute="bottom" constant="50" id="tRj-V0-TNT"/>
-                                                <constraint firstItem="tAx-Db-Ipi" firstAttribute="top" secondItem="Eup-mQ-5pN" secondAttribute="top" id="yjw-Oc-e7M"/>
+                                                <constraint firstItem="tAx-Db-Ipi" firstAttribute="top" secondItem="Qa9-3U-UOo" secondAttribute="top" id="yjw-Oc-e7M"/>
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <connections>

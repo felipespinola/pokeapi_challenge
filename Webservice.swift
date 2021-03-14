@@ -11,28 +11,30 @@ import RealmSwift
 
 class Webservices {
     
-    func getAllPokemon(completion: @escaping (Bool) -> Void) {
-        
-        AF.request("\(Constants.baseURL)pokemon").responseJSON { response in
+    func getAllPokemon(url: String, completion: @escaping (Pokemon.MainNetworkResponse?) -> Void) {
+        AF.request(url).responseJSON { response in
             guard let data = response.data else {
                 print("No data")
-                completion(false)
+                completion(nil)
                 return
             }
             
             do {
                 let pokemonMainResponse = try JSONDecoder().decode(Pokemon.MainNetworkResponse.self, from: data)
-                print(pokemonMainResponse)
                 
                 for pokemon in pokemonMainResponse.results {
-                    self.getPokemon(url: pokemon.url)
+                    print(pokemon)
+                    RealmSingleton.shared.realm.beginWrite()
+                    RealmSingleton.shared.realm.add(pokemon)
+                    try RealmSingleton.shared.realm.commitWrite()
+                    //self.getPokemon(url: pokemon.url)
                 }
                 
-                completion(true)
+                completion(pokemonMainResponse)
                 
             } catch let error {
                 print("error: \(error)")
-                completion(false)
+                completion(nil)
             }
         }
     }
