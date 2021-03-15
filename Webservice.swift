@@ -81,12 +81,42 @@ class Webservices {
                 RealmSingleton.shared.realm.beginWrite()
                 RealmSingleton.shared.realm.add(pokemon, update: .all)
                 try RealmSingleton.shared.realm.commitWrite()
+                
+                
             } catch let error {
                 print("error: \(error)")
                 completion(nil)
             }
         }
     }
+    
+    func getPokemonSpecies(url: String, completion: @escaping (Pokemon.Species?) -> Void) {
+        guard let url = URL(string: url) else {
+            return
+        }
+        AF.request(url).responseJSON { response in
+            guard let data = response.data else {
+                print("No data")
+                completion(nil)
+                return
+            }
+            
+            do {
+                let pokemon = try JSONDecoder().decode(Pokemon.Species.self, from: data)
+                completion(pokemon)
+                RealmSingleton.shared.realm.beginWrite()
+                RealmSingleton.shared.realm.add(pokemon, update: .all)
+                try RealmSingleton.shared.realm.commitWrite()
+                
+                
+            } catch let error {
+                print("error: \(error)")
+                completion(nil)
+            }
+        }
+    }
+    
+    // MARK: - Ability
     
     func getAbility(url: String, completion: @escaping (PokemonDetailAbility?) -> Void) {
         guard let url = URL(string: url) else {
@@ -112,6 +142,8 @@ class Webservices {
         }
     }
     
+    // MARK: - Type
+    
     func getType(url: String, completion: @escaping (PokemonTypeDetail?) -> Void) {
         guard let url = URL(string: url) else {
             return
@@ -126,9 +158,35 @@ class Webservices {
             do {
                 let typePokemon = try JSONDecoder().decode(PokemonTypeDetail.self, from: data)
                 completion(typePokemon)
-                print(typePokemon)
                 RealmSingleton.shared.realm.beginWrite()
                 RealmSingleton.shared.realm.add(typePokemon, update: .all)
+                try RealmSingleton.shared.realm.commitWrite()
+            } catch let error {
+                print("error: \(error)")
+                completion(nil)
+            }
+        }
+    }
+    
+    // MARK: - Evolutions
+    func getEvolutionChain(url: String, completion: @escaping (PokemonEvolutionChain?) -> Void) {
+        print(url)
+        guard let url = URL(string: url) else {
+            return
+        }
+        AF.request(url).responseJSON { response in
+            guard let data = response.data else {
+                print("No data")
+                completion(nil)
+                return
+            }
+            
+            do {
+                let evolutionChain = try JSONDecoder().decode(PokemonEvolutionChain.self, from: data)
+                completion(evolutionChain)
+                print(evolutionChain)
+                RealmSingleton.shared.realm.beginWrite()
+                RealmSingleton.shared.realm.add(evolutionChain, update: .all)
                 try RealmSingleton.shared.realm.commitWrite()
             } catch let error {
                 print("error: \(error)")

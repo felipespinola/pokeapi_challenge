@@ -10,6 +10,7 @@ import ImageSlideshow
 import Hero
 import Charts
 import Presentr
+import SDWebImage
 
 class DetailViewController: UIViewController, UIScrollViewDelegate {
     
@@ -21,9 +22,14 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var pokemonStatsHorizontalBarChartView: HorizontalBarChartView!
     @IBOutlet weak var abilityTableView: UITableView!
     @IBOutlet weak var typeTableView: UITableView!
+    @IBOutlet weak var evolutionChainCollectionView: UICollectionView!
+    @IBOutlet weak var variationPickerView: UIPickerView!
+    
     var pokemonSimple: Pokemon.PokemonSimpleResult = Pokemon.PokemonSimpleResult()
     var pokemonNumber: Int = 0
     var pokemon: Pokemon = Pokemon()
+    var evolutionChain: PokemonEvolutionChain = PokemonEvolutionChain()
+    var pokemonVarieties: [Pokemon.SpeciesVariety] = []
     
     //Presenter for custom presentation
     let presenter: Presentr = {
@@ -47,12 +53,6 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        pokemonNameLabel.text = pokemonSimple.name.capitalizingFirstLetter()
-        pokemonNameLabel.hero.id = "pokemonName"
-        
-        pokemonNumberLabel.text = String(format: "Nº %03d", arguments: [pokemonNumber])
-        pokemonNumberLabel.hero.id = "pokemonNumber"
-        
         setupImageCarousel()
         
         abilityTableView.delegate = self
@@ -63,11 +63,38 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         typeTableView.dataSource = self
         typeTableView.register(UITableViewCell.self, forCellReuseIdentifier: "typeTableViewCell")
         
-        print(pokemonSimple.name)
+        evolutionChainCollectionView.delegate = self
+        evolutionChainCollectionView.dataSource = self
+        
+        variationPickerView.delegate = self
+        variationPickerView.dataSource = self
+        
+        loadPokemon()
+    }
+    
+    func loadPokemon() {
+        pokemonNameLabel.text = pokemonSimple.name.capitalizingFirstLetter()
+        pokemonNameLabel.hero.id = "pokemonName"
+        
+        pokemonNumberLabel.text = String(format: "Nº %03d", arguments: [pokemonNumber])
+        pokemonNumberLabel.hero.id = "pokemonNumber"
+        
         Webservices().getPokemon(url: pokemonSimple.url) { result in
             if let pokemon = result {
                 self.pokemon = pokemon
-                
+                Webservices().getPokemonSpecies(url: "\(Constants.baseURL)pokemon-species/\(pokemon.id!)") { result in
+                    if let pokemonSpecies = result {
+                        self.pokemonVarieties = pokemonSpecies.varieties
+                        print(self.pokemonVarieties)
+                        self.variationPickerView.reloadAllComponents()
+                        Webservices().getEvolutionChain(url: pokemonSpecies.evolution_chain.url) { result in
+                            if let evolutionChain = result {
+                                self.evolutionChain = evolutionChain
+                                self.evolutionChainCollectionView.reloadData()
+                            }
+                        }
+                    }
+                }
                 self.setupView()
             }
         }
@@ -276,4 +303,60 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
             customPresentViewController(presenter, viewController: detailVC, animated: true, completion: nil)
         }
     }
+}
+
+// MARK: - Evolution
+extension DetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return evolutionChain.chain.evolves_to.count
+        var numberOfEvolutions = 0
+        var stopCounting = false
+        var actualChain: ChainLink = evolutionChain.chain
+        while !stopCounting {
+            if let evolution = actualChain.evolves_to.first {
+                numberOfEvolutions += 1
+                actualChain = evolution
+            } else {
+                stopCounting = true
+            }
+        }
+        print(numberOfEvolutions)
+        return numberOfEvolutions
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PokemonEvolutionChainCollectionViewCell", for: indexPath) as! PokemonEvolutionChainCollectionViewCell
+  
+        //Set pokemon name
+        cell.pokemonNameLabel.text = evolutionChain.chain.evolves_to[indexPath.row].species.name
+        cell.pokemonNameLabel.hero.id = "pokemonName"
+        
+        //Set pokemon number
+        let idFromUrl = String(evolutionChain.chain.evolves_to[indexPath.row].species.url.split(separator: "/").last ?? "")
+        //Set pokemon image
+        cell.pokemonImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        cell.pokemonImageView.sd_setImage(with: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(idFromUrl).png"), placeholderImage: nil)
+        cell.pokemonImageView.hero.id = "pokemonImage"
+        return cell
+    }
+}
+
+extension DetailViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pokemonVarieties.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return pokemonVarieties[row].pokemon.name
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        self.pokemonSimple = pokemonVarieties[row].pokemon
+        self.loadPokemon()
+    }
+    
 }

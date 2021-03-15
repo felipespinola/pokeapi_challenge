@@ -26,7 +26,6 @@ class PokemonTypeListViewController: UIViewController {
         Webservices().getType(url: type.type.url) { result in
             //result.
             if let typeResult = result {
-                print(typeResult)
                 self.pokemons = typeResult.pokemon
                 self.pokemonCollectionView.reloadData()
             }
@@ -59,7 +58,6 @@ extension PokemonTypeListViewController: UICollectionViewDelegate, UICollectionV
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PokemonSimpleCollectionViewCell", for: indexPath) as! PokemonSimpleCollectionViewCell
-        print(pokemons[indexPath.row].pokemon)
         //Set pokemon name
         cell.pokemonNameLabel.text = pokemons[indexPath.row].pokemon.name.capitalizingFirstLetter()
         cell.pokemonNameLabel.hero.id = "pokemonName"

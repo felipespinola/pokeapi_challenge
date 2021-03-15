@@ -48,8 +48,6 @@ struct Pokemon: Decodable, Realmable {
     static func primaryKey() -> String? {
         return "id"
     }
-    
-    
 }
 
 
@@ -74,6 +72,28 @@ extension Pokemon {
         //The order the Pokémon's types are listed in
         var slot: Int = 0
         //The Pokémon that has the referenced type
+        var pokemon: PokemonSimpleResult = PokemonSimpleResult()
+    }
+    
+    struct Species: Decodable, Realmable {
+        //The identifier for this resource
+        var id: Int = 0
+        //The name for this resource
+        var name: String = ""
+        //The evolution chain this Pokémon species is a member of
+        var evolution_chain: APIResource = APIResource()
+        //A list of the Pokémon that exist within this Pokémon species
+        var varieties: [SpeciesVariety] = []
+        
+        static func primaryKey() -> String? {
+            return "id"
+        }
+    }
+    
+    struct SpeciesVariety: Decodable, Realmable {
+        //Whether this variety is the default variety
+        var is_default: Bool = false
+        //The Pokémon variety
         var pokemon: PokemonSimpleResult = PokemonSimpleResult()
     }
 }
