@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import SDWebImage
 
 class MainViewController: UIViewController {
     
@@ -36,7 +37,14 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PokemonSimpleCollectionViewCell", for: indexPath) as! PokemonSimpleCollectionViewCell
         print(pokemons[indexPath.row].name)
+        //Set pokemon name
         cell.pokemonNameLabel.text = pokemons[indexPath.row].name
+        
+        //Set pokemon image
+        cell.pokemonImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        if let urlString = pokemons[indexPath.row].sprites.front_default {
+            cell.pokemonImageView.sd_setImage(with: URL(string: urlString), placeholderImage: nil)
+        }
         return cell
     }
     

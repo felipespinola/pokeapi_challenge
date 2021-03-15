@@ -6,6 +6,9 @@ PODS:
   - RealmSwift (10.5.0):
     - Realm (= 10.5.0)
   - RuntimeNew (2.1.5)
+  - SDWebImage (5.10.4):
+    - SDWebImage/Core (= 5.10.4)
+  - SDWebImage/Core (5.10.4)
   - Unrealm (1.9.0):
     - Realm (= 10.5.0)
     - RealmSwift (= 10.5.0)
@@ -13,6 +16,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 5.2)
+  - SDWebImage (~> 5.0)
   - Unrealm (from `https://github.com/arturdev/Unrealm.git`)
 
 SPEC REPOS:
@@ -21,6 +25,7 @@ SPEC REPOS:
     - Realm
     - RealmSwift
     - RuntimeNew
+    - SDWebImage
 
 EXTERNAL SOURCES:
   Unrealm:
@@ -36,8 +41,9 @@ SPEC CHECKSUMS:
   Realm: e1c22c3d83b229afb70ebc10e1771c91e9542d12
   RealmSwift: 6fc078d9d3fd7e58c71bfdbb694e252462f112a5
   RuntimeNew: ef34cf1783be4c1cbe798970bc590924dab5df87
+  SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
   Unrealm: 4992f5170f330be3e7b82b184b07dc8eb24257cc
 
-PODFILE CHECKSUM: 7a9327fb7cb8bd7e1edffb4d87c06370720c196a
+PODFILE CHECKSUM: 889d5dbc04416454c0dee02f919d3a6b036642e2
 
 COCOAPODS: 1.10.1

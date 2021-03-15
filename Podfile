@@ -7,8 +7,8 @@ target 'PokeApi' do
 
   # Pods for PokeApi
   pod 'Alamofire', '~> 5.2'
-  #pod 'RealmSwift'
-  pod 'Unrealm', :git => 'https://github.com/arturdev/Unrealm.git'    
+  pod 'Unrealm', :git => 'https://github.com/arturdev/Unrealm.git'
+  pod 'SDWebImage', '~> 5.0'
 
   target 'PokeApiTests' do
     inherit! :search_paths
