@@ -11,7 +11,35 @@ import RealmSwift
 
 class Webservices {
     
-    func getAllPokemon(url: String, completion: @escaping (Pokemon.MainNetworkResponse?) -> Void) {
+    
+    
+    func getAllPokemons() {
+        //pokemon?limit=1118
+        let cacher = ResponseCacher(behavior: .cache)
+        AF.request("\(Constants.baseURL)pokemon?limit=1118")
+            .cacheResponse(using: cacher)
+            .responseJSON { response in
+            guard let data = response.data else {
+                print("No data")
+                return
+            }
+            
+            do {
+                let pokemonMainResponse = try JSONDecoder().decode(Pokemon.MainNetworkResponse.self, from: data)
+
+                for pokemon in pokemonMainResponse.results {
+                    RealmSingleton.shared.realm.beginWrite()
+                    RealmSingleton.shared.realm.add(pokemon, update: .all)
+                    try RealmSingleton.shared.realm.commitWrite()
+                    //self.getPokemon(url: pokemon.url)
+                }
+            } catch let error {
+                print("error: \(error)")
+            }
+        }
+    }
+    
+    func get20MorePokemons(url: String, completion: @escaping (Pokemon.MainNetworkResponse?) -> Void) {
         AF.request(url).responseJSON { response in
             guard let data = response.data else {
                 print("No data")
@@ -23,9 +51,8 @@ class Webservices {
                 let pokemonMainResponse = try JSONDecoder().decode(Pokemon.MainNetworkResponse.self, from: data)
                 
                 for pokemon in pokemonMainResponse.results {
-                    print(pokemon)
                     RealmSingleton.shared.realm.beginWrite()
-                    RealmSingleton.shared.realm.add(pokemon)
+                    RealmSingleton.shared.realm.add(pokemon, update: .all)
                     try RealmSingleton.shared.realm.commitWrite()
                     //self.getPokemon(url: pokemon.url)
                 }

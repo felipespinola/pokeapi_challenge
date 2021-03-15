@@ -15,7 +15,9 @@ class MainViewController: UIViewController {
     @IBOutlet weak var pokemonCollectionView: UICollectionView!
     
     var pokemons: [Pokemon.PokemonSimpleResult] = []
+    var copyPokemons: [Pokemon.PokemonSimpleResult] = []
     var isLoading = false
+    var isSearching = false
     var nextListOfPokemonsUrl = ""
     var loadingView: LoadingReusableView?
     
@@ -27,10 +29,13 @@ class MainViewController: UIViewController {
         setupCollectionView()
         
         let search = UISearchController(searchResultsController: nil)
+        search.searchBar.placeholder = "Search Pokemon name or number"
+        search.searchResultsUpdater = self
+        search.searchBar.delegate = self
         self.navigationItem.searchController = search
         //self.navigationController?.navigationBar.prefersLargeTitles = true
         
-        Webservices().getAllPokemon(url: "\(Constants.baseURL)pokemon") { result in
+        Webservices().get20MorePokemons(url: "\(Constants.baseURL)pokemon") { result in
             if let next = result?.next {
                 if next != "" {
                     self.nextListOfPokemonsUrl = next
@@ -73,9 +78,64 @@ class MainViewController: UIViewController {
             }
         }
     }
-    
-    
+}
 
+extension MainViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+        print(text)
+        if text.count == 0 {
+            self.isSearching = false
+        } else {
+            self.isSearching = true
+        }
+    }
+}
+
+extension MainViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let queryText = searchBar.text else { return }
+        
+        //Check if the query was a string or a number
+        if Int(queryText) != nil {
+            //Number
+            var filterPokemons = Array(RealmSingleton.shared.realm.objects(Pokemon.PokemonSimpleResult.self))
+            filterPokemons = filterPokemons.sorted(by: ({$0.url.split(separator: "/").last ?? "0" < $1.url.split(separator: "/").last ?? "0"}))
+            filterPokemons = filterPokemons.filter {($0.url.split(separator: "/").last?.contains(queryText.lowercased()))!}
+            self.pokemons = filterPokemons
+        } else {
+            //Name
+            var filterPokemons = Array(RealmSingleton.shared.realm.objects(Pokemon.PokemonSimpleResult.self)).sorted(by: ({$0.url < $1.url}))
+            filterPokemons = filterPokemons.filter {$0.name.contains(queryText.lowercased())}
+            self.pokemons = filterPokemons
+        }
+        pokemonCollectionView.reloadData()
+        self.isSearching = false
+        searchBar.resignFirstResponder()
+        navigationItem.searchController?.isActive = false
+        navigationItem.searchController?.searchBar.prompt = queryText
+        navigationItem.searchController?.searchBar.searchTextField.text = queryText
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.navigationItem.searchController?.resignFirstResponder()
+        print("cancel")
+        clearSearch()
+    }
+    
+    func clearSearch() {
+        self.isSearching = false
+        Webservices().get20MorePokemons(url: "\(Constants.baseURL)pokemon") { result in
+            if let next = result?.next {
+                if next != "" {
+                    self.nextListOfPokemonsUrl = next
+                }
+            }
+            self.pokemons = []
+            self.pokemons.append(contentsOf: result?.results ?? [])
+            self.pokemonCollectionView.reloadData()
+        }
+    }
 }
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -93,6 +153,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let idFromUrl = String(pokemons[indexPath.row].url.split(separator: "/").last ?? "")
         let idInt: Int = Int(idFromUrl) ?? 0
         cell.pokemonNumberLabel.text = String(format: "Nº %03d", arguments: [idInt])
+        
         cell.pokemonNumberLabel.hero.id = "pokemonNumber"
 
         //Set pokemon image
@@ -114,7 +175,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == pokemons.count - 1 && !self.isLoading {
+        if indexPath.row == pokemons.count - 1 && !self.isLoading && (!self.isSearching && self.navigationItem.searchController?.searchBar.searchTextField.text == "") {
             loadMoreData()
         }
     }
@@ -124,7 +185,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         if !self.isLoading {
             self.isLoading = true
             DispatchQueue.global().async {
-                Webservices().getAllPokemon(url: self.nextListOfPokemonsUrl) { result in
+                Webservices().get20MorePokemons(url: self.nextListOfPokemonsUrl) { result in
                     if let next = result?.next {
                         if next != "" {
                             self.nextListOfPokemonsUrl = next
@@ -139,7 +200,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        if self.isLoading {
+        if self.isLoading || !self.isSearching {
             return CGSize.zero
         } else {
             return CGSize(width: collectionView.bounds.size.width, height: 55)
@@ -147,7 +208,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionFooter {
+        if (kind == UICollectionView.elementKindSectionFooter) {
             let sectionFooter = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "LoadingReusableView", for: indexPath) as! LoadingReusableView
             loadingView = sectionFooter
             loadingView?.backgroundColor = UIColor.clear

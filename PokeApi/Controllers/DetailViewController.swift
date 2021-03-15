@@ -232,6 +232,7 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "abilitiyTableViewCell", for: indexPath)
         cell.textLabel?.text = pokemon.abilities[indexPath.row].ability.name.capitalizingFirstLetter()
+        cell.selectionStyle = .none
         return cell
     }
     

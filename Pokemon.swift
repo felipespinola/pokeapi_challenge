@@ -54,15 +54,19 @@ struct Pokemon: Decodable, Realmable {
 
 
 extension Pokemon {
-    struct MainNetworkResponse: Decodable {
-        var count: Int
+    struct MainNetworkResponse: Decodable, Realmable {
+        var count: Int = 0
         var next: String?
         var previous: String?
-        var results: [PokemonSimpleResult]
+        var results: [PokemonSimpleResult] = []
     }
     
     struct PokemonSimpleResult: Decodable, Realmable {
         var name: String = ""
         var url: String = ""
+        
+        static func primaryKey() -> String? {
+            return "name"
+        }
     }
 }
