@@ -9,6 +9,7 @@ import UIKit
 import ImageSlideshow
 import Hero
 import Charts
+import Presentr
 
 class DetailViewController: UIViewController, UIScrollViewDelegate {
     
@@ -18,9 +19,28 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var pokemonNumberLabel: UILabel!
     
     @IBOutlet weak var pokemonStatsHorizontalBarChartView: HorizontalBarChartView!
+    @IBOutlet weak var abilityTableView: UITableView!
     var pokemonSimple: Pokemon.PokemonSimpleResult = Pokemon.PokemonSimpleResult()
     var pokemonNumber: Int = 0
     var pokemon: Pokemon = Pokemon()
+    
+    //Presenter for custom presentation
+    let presenter: Presentr = {
+        let width = ModalSize.full
+        let height = ModalSize.fluid(percentage: 0.50)
+        let center = ModalCenterPosition.customOrigin(origin: CGPoint(x: 0, y: 0))
+        let customType = PresentationType.custom(width: width, height: height, center: center)
+
+        let customPresenter = Presentr(presentationType: customType)
+        customPresenter.transitionType = .coverVertical
+        customPresenter.dismissTransitionType = .crossDissolve
+        customPresenter.roundCorners = true
+        customPresenter.backgroundColor = .clear
+        customPresenter.backgroundOpacity = 0.5
+        customPresenter.dismissOnSwipe = true
+        customPresenter.dismissOnSwipeDirection = .top
+        return customPresenter
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +52,23 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         pokemonNumberLabel.text = String(format: "Nº %03d", arguments: [pokemonNumber])
         pokemonNumberLabel.hero.id = "pokemonNumber"
         
+        setupImageCarousel()
+        
+        abilityTableView.delegate = self
+        abilityTableView.dataSource = self
+        abilityTableView.register(UITableViewCell.self, forCellReuseIdentifier: "abilitiyTableViewCell")
+        
+        print(pokemonSimple.name)
+        Webservices().getPokemon(url: pokemonSimple.url) { result in
+            if let pokemon = result {
+                self.pokemon = pokemon
+                
+                self.setupView()
+            }
+        }
+    }
+    
+    func setupImageCarousel() {
         imageSlideshow.zoomEnabled = false
         imageSlideshow.circular = false
         imageSlideshow.pageIndicatorPosition = .init(horizontal: .center, vertical: .under)
@@ -45,17 +82,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         // optional way to show activity indicator during image load (skipping the line will show no activity indicator)
         imageSlideshow.activityIndicator = DefaultActivityIndicator()
         imageSlideshow.delegate = self
-        
         imageSlideshow.hero.id = "pokemonImage"
-        
-        print(pokemonSimple.name)
-        Webservices().getPokemon(url: pokemonSimple.url) { result in
-            if let pokemon = result {
-                self.pokemon = pokemon
-                
-                self.setupView()
-            }
-        }
     }
     
     func setupView() {
@@ -173,7 +200,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Abilities
     func loadAbilities() {
-        
+        abilityTableView.reloadData()
     }
     
     @IBAction func dismissView(_ sender: UIButton) {
@@ -194,5 +221,32 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
 extension DetailViewController: ImageSlideshowDelegate {
     func imageSlideshow(_ imageSlideshow: ImageSlideshow, didChangeCurrentPageTo page: Int) {
         print("current page:", page)
+    }
+}
+
+extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return pokemon.abilities.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "abilitiyTableViewCell", for: indexPath)
+        cell.textLabel?.text = pokemon.abilities[indexPath.row].ability.name.capitalizingFirstLetter()
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        print("Present VC")
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let detailVC = storyboard.instantiateViewController(identifier: "AbilityDetailViewController") as! AbilityDetailViewController
+        presenter.presentationType = .bottomHalf
+        detailVC.ability = pokemon.abilities[indexPath.row]
+        customPresentViewController(presenter, viewController: detailVC, animated: true, completion: nil)
+        
+//        detailVC.hero.modalAnimationType = .selectBy(presenting: .slide(direction: .left), dismissing: .slide(direction: .right))
+//        detailVC.modalPresentationStyle = .formSheet
+//        self.present(detailVC, animated: true, completion: nil)
     }
 }

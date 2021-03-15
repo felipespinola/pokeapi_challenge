@@ -12,6 +12,7 @@ target 'PokeApi' do
   pod 'Hero'
   pod 'ImageSlideshow/SDWebImage'
   pod 'Charts'
+  pod 'Presentr'
 
   target 'PokeApiTests' do
     inherit! :search_paths

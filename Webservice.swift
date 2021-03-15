@@ -62,4 +62,28 @@ class Webservices {
             }
         }
     }
+    
+    func getAbility(url: String, completion: @escaping (PokemonDetailAbility?) -> Void) {
+        guard let url = URL(string: url) else {
+            return
+        }
+        AF.request(url).responseJSON { response in
+            guard let data = response.data else {
+                print("No data")
+                completion(nil)
+                return
+            }
+            
+            do {
+                let ability = try JSONDecoder().decode(PokemonDetailAbility.self, from: data)
+                completion(ability)
+                RealmSingleton.shared.realm.beginWrite()
+                RealmSingleton.shared.realm.add(ability, update: .all)
+                try RealmSingleton.shared.realm.commitWrite()
+            } catch let error {
+                print("error: \(error)")
+                completion(nil)
+            }
+        }
+    }
 }
