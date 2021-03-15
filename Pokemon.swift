@@ -69,4 +69,11 @@ extension Pokemon {
             return "name"
         }
     }
+    
+    struct TypePokemon: Decodable, Realmable {
+        //The order the Pokémon's types are listed in
+        var slot: Int = 0
+        //The Pokémon that has the referenced type
+        var pokemon: PokemonSimpleResult = PokemonSimpleResult()
+    }
 }

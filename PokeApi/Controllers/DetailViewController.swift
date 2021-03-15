@@ -20,6 +20,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     
     @IBOutlet weak var pokemonStatsHorizontalBarChartView: HorizontalBarChartView!
     @IBOutlet weak var abilityTableView: UITableView!
+    @IBOutlet weak var typeTableView: UITableView!
     var pokemonSimple: Pokemon.PokemonSimpleResult = Pokemon.PokemonSimpleResult()
     var pokemonNumber: Int = 0
     var pokemon: Pokemon = Pokemon()
@@ -27,7 +28,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     //Presenter for custom presentation
     let presenter: Presentr = {
         let width = ModalSize.full
-        let height = ModalSize.fluid(percentage: 0.50)
+        let height = ModalSize.fluid(percentage: 0.80)
         let center = ModalCenterPosition.customOrigin(origin: CGPoint(x: 0, y: 0))
         let customType = PresentationType.custom(width: width, height: height, center: center)
 
@@ -38,7 +39,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         customPresenter.backgroundColor = .clear
         customPresenter.backgroundOpacity = 0.5
         customPresenter.dismissOnSwipe = true
-        customPresenter.dismissOnSwipeDirection = .top
+        customPresenter.dismissOnSwipeDirection = .bottom
         return customPresenter
     }()
 
@@ -57,6 +58,10 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         abilityTableView.delegate = self
         abilityTableView.dataSource = self
         abilityTableView.register(UITableViewCell.self, forCellReuseIdentifier: "abilitiyTableViewCell")
+        
+        typeTableView.delegate = self
+        typeTableView.dataSource = self
+        typeTableView.register(UITableViewCell.self, forCellReuseIdentifier: "typeTableViewCell")
         
         print(pokemonSimple.name)
         Webservices().getPokemon(url: pokemonSimple.url) { result in
@@ -94,6 +99,8 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         loadStats()
         //Abilities
         loadAbilities()
+        //Types
+        loadTypes()
     }
     
     // MARK: - Sprites
@@ -203,6 +210,11 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         abilityTableView.reloadData()
     }
     
+    // MARK: - Types
+    func loadTypes() {
+        typeTableView.reloadData()
+    }
+    
     @IBAction func dismissView(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -226,28 +238,42 @@ extension DetailViewController: ImageSlideshowDelegate {
 
 extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return pokemon.abilities.count
+        if tableView == abilityTableView {
+            return pokemon.abilities.count
+        } else {
+            return pokemon.types.count
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "abilitiyTableViewCell", for: indexPath)
-        cell.textLabel?.text = pokemon.abilities[indexPath.row].ability.name.capitalizingFirstLetter()
-        cell.selectionStyle = .none
-        return cell
+        if tableView == abilityTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "abilitiyTableViewCell", for: indexPath)
+            cell.textLabel?.text = pokemon.abilities[indexPath.row].ability.name.capitalizingFirstLetter()
+            cell.selectionStyle = .none
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "typeTableViewCell", for: indexPath)
+            
+            cell.textLabel?.text = pokemon.types[indexPath.row].type.name.capitalizingFirstLetter()
+            cell.selectionStyle = .none
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        print("Present VC")
-        
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let detailVC = storyboard.instantiateViewController(identifier: "AbilityDetailViewController") as! AbilityDetailViewController
-        presenter.presentationType = .bottomHalf
-        detailVC.ability = pokemon.abilities[indexPath.row]
-        customPresentViewController(presenter, viewController: detailVC, animated: true, completion: nil)
-        
-//        detailVC.hero.modalAnimationType = .selectBy(presenting: .slide(direction: .left), dismissing: .slide(direction: .right))
-//        detailVC.modalPresentationStyle = .formSheet
-//        self.present(detailVC, animated: true, completion: nil)
+        if tableView == abilityTableView {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let detailVC = storyboard.instantiateViewController(identifier: "AbilityDetailViewController") as! AbilityDetailViewController
+            presenter.presentationType = .bottomHalf
+            detailVC.ability = pokemon.abilities[indexPath.row]
+            customPresentViewController(presenter, viewController: detailVC, animated: true, completion: nil)
+        } else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let detailVC = storyboard.instantiateViewController(identifier: "PokemonTypeListViewController") as! PokemonTypeListViewController
+            presenter.presentationType = .fullScreen
+            detailVC.type = pokemon.types[indexPath.row]
+            customPresentViewController(presenter, viewController: detailVC, animated: true, completion: nil)
+        }
     }
 }

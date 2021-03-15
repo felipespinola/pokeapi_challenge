@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        Realm.registerRealmables(Pokemon.self, Pokemon.PokemonSimpleResult.self, NamedAPIResource.self, VersionGameIndex.self, PokemonAbility.self, PokemonHeldItem.self, PokemonHeldItemVersion.self, PokemonMove.self, PokemonMoveVersion.self, PokemonStat.self, PokemonSprites.self, PokemonType.self, PokemonDetailAbility.self, VerboseEffect.self)
+        Realm.registerRealmables(Pokemon.self, Pokemon.PokemonSimpleResult.self, NamedAPIResource.self, VersionGameIndex.self, PokemonAbility.self, PokemonHeldItem.self, PokemonHeldItemVersion.self, PokemonMove.self, PokemonMoveVersion.self, PokemonStat.self, PokemonSprites.self, PokemonType.self, PokemonDetailAbility.self, VerboseEffect.self, PokemonTypeDetail.self, Pokemon.TypePokemon.self)
         
         if #available(iOS 13.0, *) {
             let navBarAppearance = UINavigationBarAppearance()

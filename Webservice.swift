@@ -11,8 +11,6 @@ import RealmSwift
 
 class Webservices {
     
-    
-    
     func getAllPokemons() {
         //pokemon?limit=1118
         let cacher = ResponseCacher(behavior: .cache)
@@ -106,6 +104,31 @@ class Webservices {
                 completion(ability)
                 RealmSingleton.shared.realm.beginWrite()
                 RealmSingleton.shared.realm.add(ability, update: .all)
+                try RealmSingleton.shared.realm.commitWrite()
+            } catch let error {
+                print("error: \(error)")
+                completion(nil)
+            }
+        }
+    }
+    
+    func getType(url: String, completion: @escaping (PokemonTypeDetail?) -> Void) {
+        guard let url = URL(string: url) else {
+            return
+        }
+        AF.request(url).responseJSON { response in
+            guard let data = response.data else {
+                print("No data")
+                completion(nil)
+                return
+            }
+            
+            do {
+                let typePokemon = try JSONDecoder().decode(PokemonTypeDetail.self, from: data)
+                completion(typePokemon)
+                print(typePokemon)
+                RealmSingleton.shared.realm.beginWrite()
+                RealmSingleton.shared.realm.add(typePokemon, update: .all)
                 try RealmSingleton.shared.realm.commitWrite()
             } catch let error {
                 print("error: \(error)")

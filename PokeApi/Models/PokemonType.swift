@@ -14,3 +14,18 @@ struct PokemonType: Decodable, Realmable {
     //The type the referenced Pokémon has
     var type: NamedAPIResource = NamedAPIResource()
 }
+
+
+
+struct PokemonTypeDetail: Decodable, Realmable {
+    //The identifier for this resource
+    var id: Int = 0
+    //The name for this resource
+    var name: String = ""
+    //A list of details of Pokémon that have this type
+    var pokemon: [Pokemon.TypePokemon] = []
+    
+    static func primaryKey() -> String? {
+        return "id"
+    }
+}
