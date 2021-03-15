@@ -11,6 +11,7 @@ import Hero
 import Charts
 import Presentr
 import SDWebImage
+import Reachability
 
 class DetailViewController: UIViewController, UIScrollViewDelegate {
     
@@ -30,6 +31,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     var pokemon: Pokemon = Pokemon()
     var evolutionChain: PokemonEvolutionChain = PokemonEvolutionChain()
     var pokemonVarieties: [Pokemon.SpeciesVariety] = []
+    let reachability = try! Reachability()
     
     //Presenter for custom presentation
     let presenter: Presentr = {
@@ -79,13 +81,13 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         pokemonNumberLabel.text = String(format: "Nº %03d", arguments: [pokemonNumber])
         pokemonNumberLabel.hero.id = "pokemonNumber"
         
+        
         Webservices().getPokemon(url: pokemonSimple.url) { result in
             if let pokemon = result {
                 self.pokemon = pokemon
-                Webservices().getPokemonSpecies(url: "\(Constants.baseURL)pokemon-species/\(pokemon.id!)") { result in
+                Webservices().getPokemonSpecies(url: "\(Constants.baseURL)pokemon-species/\(pokemon.id)") { result in
                     if let pokemonSpecies = result {
                         self.pokemonVarieties = pokemonSpecies.varieties
-                        print(self.pokemonVarieties)
                         self.variationPickerView.reloadAllComponents()
                         Webservices().getEvolutionChain(url: pokemonSpecies.evolution_chain.url) { result in
                             if let evolutionChain = result {
@@ -98,6 +100,8 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
                 self.setupView()
             }
         }
+        
+        
     }
     
     func setupImageCarousel() {
@@ -259,7 +263,6 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
 
 extension DetailViewController: ImageSlideshowDelegate {
     func imageSlideshow(_ imageSlideshow: ImageSlideshow, didChangeCurrentPageTo page: Int) {
-        print("current page:", page)
     }
 }
 
@@ -309,6 +312,7 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
 extension DetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return evolutionChain.chain.evolves_to.count
+        /*
         var numberOfEvolutions = 0
         var stopCounting = false
         var actualChain: ChainLink = evolutionChain.chain
@@ -320,8 +324,7 @@ extension DetailViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 stopCounting = true
             }
         }
-        print(numberOfEvolutions)
-        return numberOfEvolutions
+        return numberOfEvolutions*/
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

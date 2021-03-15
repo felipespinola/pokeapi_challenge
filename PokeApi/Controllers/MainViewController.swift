@@ -83,7 +83,6 @@ class MainViewController: UIViewController {
 extension MainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
-        print(text)
         if text.count == 0 {
             self.isSearching = false
         } else {
@@ -119,7 +118,6 @@ extension MainViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.navigationItem.searchController?.resignFirstResponder()
-        print("cancel")
         clearSearch()
     }
     
@@ -181,7 +179,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func loadMoreData() {
-        print("Load more data")
         if !self.isLoading {
             self.isLoading = true
             DispatchQueue.global().async {

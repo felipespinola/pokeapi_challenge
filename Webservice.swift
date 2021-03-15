@@ -11,11 +11,13 @@ import RealmSwift
 
 class Webservices {
     
+    let cacher = ResponseCacher(behavior: .cache)
+    
     func getAllPokemons() {
         //pokemon?limit=1118
-        let cacher = ResponseCacher(behavior: .cache)
         AF.request("\(Constants.baseURL)pokemon?limit=1118")
             .cacheResponse(using: cacher)
+            .validate()
             .responseJSON { response in
             guard let data = response.data else {
                 print("No data")
@@ -29,7 +31,6 @@ class Webservices {
                     RealmSingleton.shared.realm.beginWrite()
                     RealmSingleton.shared.realm.add(pokemon, update: .all)
                     try RealmSingleton.shared.realm.commitWrite()
-                    //self.getPokemon(url: pokemon.url)
                 }
             } catch let error {
                 print("error: \(error)")
@@ -38,7 +39,10 @@ class Webservices {
     }
     
     func get20MorePokemons(url: String, completion: @escaping (Pokemon.MainNetworkResponse?) -> Void) {
-        AF.request(url).responseJSON { response in
+        AF.request(url)
+            .cacheResponse(using: cacher)
+            .validate()
+            .responseJSON { response in
             guard let data = response.data else {
                 print("No data")
                 completion(nil)
@@ -47,16 +51,12 @@ class Webservices {
             
             do {
                 let pokemonMainResponse = try JSONDecoder().decode(Pokemon.MainNetworkResponse.self, from: data)
-                
                 for pokemon in pokemonMainResponse.results {
                     RealmSingleton.shared.realm.beginWrite()
                     RealmSingleton.shared.realm.add(pokemon, update: .all)
                     try RealmSingleton.shared.realm.commitWrite()
-                    //self.getPokemon(url: pokemon.url)
                 }
-                
                 completion(pokemonMainResponse)
-                
             } catch let error {
                 print("error: \(error)")
                 completion(nil)
@@ -68,7 +68,10 @@ class Webservices {
         guard let url = URL(string: url) else {
             return
         }
-        AF.request(url).responseJSON { response in
+        AF.request(url)
+            .cacheResponse(using: cacher)
+            .validate()
+            .responseJSON { response in
             guard let data = response.data else {
                 print("No data")
                 completion(nil)
@@ -94,7 +97,10 @@ class Webservices {
         guard let url = URL(string: url) else {
             return
         }
-        AF.request(url).responseJSON { response in
+        AF.request(url)
+            .cacheResponse(using: cacher)
+            .validate()
+            .responseJSON { response in
             guard let data = response.data else {
                 print("No data")
                 completion(nil)
@@ -122,7 +128,10 @@ class Webservices {
         guard let url = URL(string: url) else {
             return
         }
-        AF.request(url).responseJSON { response in
+        AF.request(url)
+            .cacheResponse(using: cacher)
+            .validate()
+            .responseJSON { response in
             guard let data = response.data else {
                 print("No data")
                 completion(nil)
@@ -148,7 +157,10 @@ class Webservices {
         guard let url = URL(string: url) else {
             return
         }
-        AF.request(url).responseJSON { response in
+        AF.request(url)
+            .cacheResponse(using: cacher)
+            .validate()
+            .responseJSON { response in
             guard let data = response.data else {
                 print("No data")
                 completion(nil)
@@ -174,7 +186,10 @@ class Webservices {
         guard let url = URL(string: url) else {
             return
         }
-        AF.request(url).responseJSON { response in
+        AF.request(url)
+            .cacheResponse(using: cacher)
+            .validate()
+            .responseJSON { response in
             guard let data = response.data else {
                 print("No data")
                 completion(nil)
