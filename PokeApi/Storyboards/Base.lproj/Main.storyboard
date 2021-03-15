@@ -129,7 +129,7 @@
                                 <rect key="frame" x="0.0" y="124" width="414" height="738"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="sDa-9H-Ll1">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1500"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1200"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="ySr-0b-tb2">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="150"/>
@@ -396,10 +396,10 @@
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TOo-rG-V4L">
-                                                <rect key="frame" x="0.0" y="1123" width="414" height="377"/>
+                                                <rect key="frame" x="0.0" y="1123" width="414" height="77"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vql-s6-Rsj">
-                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="377"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="77"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     </view>
                                                 </subviews>
@@ -412,7 +412,7 @@
                                             <constraint firstItem="TOo-rG-V4L" firstAttribute="leading" secondItem="sDa-9H-Ll1" secondAttribute="leading" id="8Ra-Pg-YWa"/>
                                             <constraint firstAttribute="trailing" secondItem="WDG-zZ-I5g" secondAttribute="trailing" id="Acw-V9-5em"/>
                                             <constraint firstAttribute="trailing" secondItem="weO-7d-Yyw" secondAttribute="trailing" id="CfU-hd-1D6"/>
-                                            <constraint firstAttribute="height" constant="1500" id="LdS-hj-9tf"/>
+                                            <constraint firstAttribute="height" constant="1200" id="LdS-hj-9tf"/>
                                             <constraint firstItem="jCi-ah-ggQ" firstAttribute="leading" secondItem="sDa-9H-Ll1" secondAttribute="leading" id="M9Q-XC-ZvO"/>
                                             <constraint firstAttribute="trailing" secondItem="4Kb-kJ-J0L" secondAttribute="trailing" id="c3m-ms-dgm"/>
                                             <constraint firstItem="akq-9h-uMI" firstAttribute="leading" secondItem="sDa-9H-Ll1" secondAttribute="leading" id="cft-sq-QUY"/>

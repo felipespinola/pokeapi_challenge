@@ -11,7 +11,6 @@ import Hero
 import Charts
 import Presentr
 import SDWebImage
-import Reachability
 
 class DetailViewController: UIViewController, UIScrollViewDelegate {
     
@@ -31,7 +30,6 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     var pokemon: Pokemon = Pokemon()
     var evolutionChain: PokemonEvolutionChain = PokemonEvolutionChain()
     var pokemonVarieties: [Pokemon.SpeciesVariety] = []
-    let reachability = try! Reachability()
     
     //Presenter for custom presentation
     let presenter: Presentr = {
