@@ -93,17 +93,24 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let idFromUrl = String(pokemons[indexPath.row].url.split(separator: "/").last ?? "")
         let idInt: Int = Int(idFromUrl) ?? 0
         cell.pokemonNumberLabel.text = String(format: "Nº %03d", arguments: [idInt])
+        cell.pokemonNumberLabel.hero.id = "pokemonNumber"
 
         //Set pokemon image
         cell.pokemonImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
-        cell.pokemonImageView.sd_setImage(with: URL(string: "\(Constants.officialArtworkBaseURL)\(idFromUrl).png"), placeholderImage: nil)
+        cell.pokemonImageView.sd_setImage(with: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(idFromUrl).png"), placeholderImage: nil)
+        cell.pokemonImageView.hero.id = "pokemonImage"
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let pokemon = pokemons[indexPath.row]
-        
-        self.performSegue(withIdentifier: "goToPokemonDetailSegue", sender: pokemon)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let detailVC = storyboard.instantiateViewController(identifier: "DetailViewController") as! DetailViewController
+        detailVC.hero.modalAnimationType = .selectBy(presenting: .slide(direction: .left), dismissing: .slide(direction: .right))
+        detailVC.pokemonSimple = pokemon
+        detailVC.pokemonNumber = Int(String(pokemons[indexPath.row].url.split(separator: "/").last ?? "")) ?? 0
+        self.present(detailVC, animated: true, completion: nil)
+        //self.performSegue(withIdentifier: "goToPokemonDetailSegue", sender: pokemon)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

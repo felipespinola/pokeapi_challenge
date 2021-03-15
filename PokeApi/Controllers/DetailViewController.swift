@@ -8,14 +8,18 @@
 import UIKit
 import ImageSlideshow
 import Hero
+import Charts
 
 class DetailViewController: UIViewController, UIScrollViewDelegate {
     
     @IBOutlet weak var imageSlideshow: ImageSlideshow!
-    
+    @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var pokemonNameLabel: UILabel!
+    @IBOutlet weak var pokemonNumberLabel: UILabel!
     
+    @IBOutlet weak var pokemonStatsHorizontalBarChartView: HorizontalBarChartView!
     var pokemonSimple: Pokemon.PokemonSimpleResult = Pokemon.PokemonSimpleResult()
+    var pokemonNumber: Int = 0
     var pokemon: Pokemon = Pokemon()
 
     override func viewDidLoad() {
@@ -24,6 +28,9 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         // Do any additional setup after loading the view.
         pokemonNameLabel.text = pokemonSimple.name.capitalizingFirstLetter()
         pokemonNameLabel.hero.id = "pokemonName"
+        
+        pokemonNumberLabel.text = String(format: "Nº %03d", arguments: [pokemonNumber])
+        pokemonNumberLabel.hero.id = "pokemonNumber"
         
         imageSlideshow.zoomEnabled = false
         imageSlideshow.circular = false
@@ -39,6 +46,8 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         imageSlideshow.activityIndicator = DefaultActivityIndicator()
         imageSlideshow.delegate = self
         
+        imageSlideshow.hero.id = "pokemonImage"
+        
         print(pokemonSimple.name)
         Webservices().getPokemon(url: pokemonSimple.url) { result in
             if let pokemon = result {
@@ -52,9 +61,15 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     func setupView() {
         pokemonNameLabel.text = pokemon.name.capitalizingFirstLetter()
         
+        //Sprites
         loadSpritesToCarousel()
+        //Stats
+        loadStats()
+        //Abilities
+        loadAbilities()
     }
     
+    // MARK: - Sprites
     func loadSpritesToCarousel() {
         var arrayOfValidSprites: [InputSource] = []
         if let front_default = pokemon.sprites.front_default {
@@ -84,10 +99,86 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         imageSlideshow.setImageInputs(arrayOfValidSprites)
     }
     
-    @objc func closedView() {
+    // MARK: - Stats
+    func loadStats() {
+        pokemonStatsHorizontalBarChartView.noDataText = "Can't get stats for this Pokemon. Try again later"
+        pokemonStatsHorizontalBarChartView.pinchZoomEnabled = false
+        pokemonStatsHorizontalBarChartView.doubleTapToZoomEnabled = false
+        
+        var chartDataEntry = [BarChartDataEntry]()
+        
+        for i in 0..<pokemon.stats.count {
+            let dataEntry = BarChartDataEntry(x: Double(i), y: Double(pokemon.stats[i].base_stat))
+            chartDataEntry.append(dataEntry)
+        }
+        
+        let chartDataSet = BarChartDataSet(entries: chartDataEntry, label: "Base Stat Value")
+        //chartDataSet.drawValuesEnabled = true
+        chartDataSet.colors = ChartColorTemplates.colorful()
+
+        let chartMain = BarChartData()
+        chartMain.barWidth = 0.2
+
+        chartMain.addDataSet(chartDataSet)
+        pokemonStatsHorizontalBarChartView.animate(yAxisDuration: 0.5)
+        pokemonStatsHorizontalBarChartView.data = chartMain
+        
+        pokemonStatsHorizontalBarChartView.xAxis.labelCount = chartDataSet.count
+        
+        configureCharts()
+    }
+    
+    func configureCharts() {
+        //Setup xAxis
+        pokemonStatsHorizontalBarChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: pokemon.stats.map {$0.stat.name})
+        pokemonStatsHorizontalBarChartView.xAxis.granularity = 1.0
+        pokemonStatsHorizontalBarChartView.xAxis.labelPosition = .bottom
+        pokemonStatsHorizontalBarChartView.xAxis.drawGridLinesEnabled = false
+        pokemonStatsHorizontalBarChartView.xAxis.axisMinimum = 0
+        pokemonStatsHorizontalBarChartView.xAxis.axisLineColor = .clear
+        pokemonStatsHorizontalBarChartView.xAxis.drawAxisLineEnabled = false
+        pokemonStatsHorizontalBarChartView.leftAxis.labelPosition = .insideChart
+        pokemonStatsHorizontalBarChartView.leftAxis.enabled = false
+        pokemonStatsHorizontalBarChartView.leftAxis.axisMinimum = 0
+        pokemonStatsHorizontalBarChartView.leftAxis.drawGridLinesEnabled = false
+        pokemonStatsHorizontalBarChartView.minOffset = 10
+        
+        //Setup yAxis
+        pokemonStatsHorizontalBarChartView.rightAxis.drawGridLinesEnabled = false
+        pokemonStatsHorizontalBarChartView.rightAxis.drawZeroLineEnabled = false
+        pokemonStatsHorizontalBarChartView.rightAxis.spaceBottom = 10
+        pokemonStatsHorizontalBarChartView.rightAxis.granularity = 1.0
+        pokemonStatsHorizontalBarChartView.rightAxis.axisMinimum = 0.0
+        pokemonStatsHorizontalBarChartView.rightAxis.axisLineColor = .clear
+        
+        //Disable gestures
+        pokemonStatsHorizontalBarChartView.pinchZoomEnabled = false
+        pokemonStatsHorizontalBarChartView.doubleTapToZoomEnabled = false
+        pokemonStatsHorizontalBarChartView.scaleXEnabled = false
+        pokemonStatsHorizontalBarChartView.scaleYEnabled = false
+        
+        //Setup chart
+        pokemonStatsHorizontalBarChartView.drawBordersEnabled = false
+        pokemonStatsHorizontalBarChartView.drawValueAboveBarEnabled = true
+        pokemonStatsHorizontalBarChartView.drawGridBackgroundEnabled = false
+        pokemonStatsHorizontalBarChartView.animate(xAxisDuration: 2.0, yAxisDuration: 2.0)
+        pokemonStatsHorizontalBarChartView.extraRightOffset = 20
+        pokemonStatsHorizontalBarChartView.extraBottomOffset = 30
+        pokemonStatsHorizontalBarChartView.fitScreen()
+        pokemonStatsHorizontalBarChartView.notifyDataSetChanged()
+
+        guard let description = pokemonStatsHorizontalBarChartView.chartDescription else {return}
+        description.text = ""
+    }
+    
+    // MARK: - Abilities
+    func loadAbilities() {
         
     }
-
+    
+    @IBAction func dismissView(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
     /*
     // MARK: - Navigation
 
