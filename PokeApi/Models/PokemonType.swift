@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Unrealm
 
-struct PokemonType: Decodable {
+struct PokemonType: Decodable, Realmable {
     //The order the Pokémon's types are listed in
-    var slot: Int
+    var slot: Int = 0
     //The type the referenced Pokémon has
-    var type: NamedAPIResource
+    var type: NamedAPIResource = NamedAPIResource()
 }

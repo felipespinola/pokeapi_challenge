@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Unrealm
+import RealmSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,6 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        Realm.registerRealmables(Pokemon.self, NamedAPIResource.self, VersionGameIndex.self, PokemonAbility.self, PokemonHeldItem.self, PokemonHeldItemVersion.self, PokemonMove.self, PokemonMoveVersion.self, PokemonStat.self, PokemonSprites.self, PokemonType.self)
+        
         return true
     }
 

@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Unrealm
 
-struct VersionGameIndex: Decodable {
+struct VersionGameIndex: Decodable, Realmable {
     //The internal id of an API resource within game data
-    var game_index: Int
+    var game_index: Int = 0
     //The version relevent to this game index
-    var version: NamedAPIResource
+    var version: NamedAPIResource = NamedAPIResource()
 }

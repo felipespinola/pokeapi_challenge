@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Unrealm
 
-struct PokemonSprites: Decodable {
+struct PokemonSprites: Decodable, Realmable {
     //The default depiction of this Pokémon from the front in battle
     var front_default: String?
     //The shiny depiction of this Pokémon from the front in battle

@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import Unrealm
 
-struct PokemonAbility: Decodable {
+struct PokemonAbility: Decodable, Realmable {
     //Whether or not this is a hidden ability
-    var is_hidden: Bool
+    var is_hidden: Bool = false
     //The slot this ability occupies in this Pokémon species
-    var slot: Int
+    var slot: Int = 0
     //The ability the Pokémon may have
-    var ability: NamedAPIResource
+    var ability: NamedAPIResource = NamedAPIResource()
 }

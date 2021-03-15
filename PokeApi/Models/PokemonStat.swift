@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import Unrealm
 
-struct PokemonStat: Decodable {
+struct PokemonStat: Decodable, Realmable {
     //The stat the Pokémon has
-    var stat: NamedAPIResource
+    var stat: NamedAPIResource = NamedAPIResource()
     //The effort points (EV) the Pokémon has in the stat
-    var effort: Int
+    var effort: Int = 0
     //The base value of the stat
-    var base_stat: Int
+    var base_stat: Int = 0
 }

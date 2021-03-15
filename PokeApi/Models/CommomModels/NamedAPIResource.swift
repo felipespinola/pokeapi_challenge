@@ -6,10 +6,15 @@
 //
 
 import Foundation
+import Unrealm
 
-struct NamedAPIResource: Decodable {
+struct NamedAPIResource: Decodable, Realmable {
     //The name of the referenced resource
-    var name: String
+    var name: String = ""
     //The URL of the referenced resource
-    var url: String
+    var url: String = ""
+    
+    static func primaryKey() -> String? {
+        return "id"
+    }
 }

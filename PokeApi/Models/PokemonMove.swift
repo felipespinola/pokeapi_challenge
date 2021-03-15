@@ -6,19 +6,20 @@
 //
 
 import Foundation
+import Unrealm
 
-struct PokemonMove: Decodable {
+struct PokemonMove: Decodable, Realmable {
     //The move the Pokémon can learn
-    var move: NamedAPIResource
+    var move: NamedAPIResource = NamedAPIResource()
     //The details of the version in which the Pokémon can learn the move
-    var version_group_details: [PokemonMoveVersion]
+    var version_group_details: [PokemonMoveVersion] = []
 }
 
-struct PokemonMoveVersion: Decodable {
+struct PokemonMoveVersion: Decodable, Realmable {
     //The method by which the move is learned
-    var move_learn_method: NamedAPIResource
+    var move_learn_method: NamedAPIResource = NamedAPIResource()
     //The version group in which the move is learned
-    var version_group: NamedAPIResource
+    var version_group: NamedAPIResource = NamedAPIResource()
     //The minimum level to learn the move
-    var level_learned_at: Int
+    var level_learned_at: Int = 0
 }

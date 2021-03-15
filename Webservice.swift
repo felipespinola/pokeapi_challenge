@@ -44,7 +44,6 @@ class Webservices {
             
             do {
                 let result = try JSONDecoder().decode(Pokemon.self, from: data)
-                print(result)
             } catch let error {
                 print("error: \(error)")
             }
