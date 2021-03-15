@@ -46,12 +46,20 @@
                                                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabledForSubviews" value="YES"/>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="nZ7-oQ-1hP">
                                                     <rect key="frame" x="5" y="132" width="90" height="13"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="12"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabledForSubviews" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
                                                 </label>
                                             </subviews>
                                             <constraints>
@@ -91,13 +99,66 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Wuw-ii-yKG"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="pokemonCollectionView" destination="Xfd-M4-JDv" id="Mhf-nu-9wp"/>
+                        <segue destination="Szn-3r-Kie" kind="show" identifier="goToPokemonDetailSegue" id="W2u-nS-QKx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="989.85507246376824" y="137.94642857142856"/>
+        </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="Y2h-dC-heq">
+            <objects>
+                <viewController id="Szn-3r-Kie" customClass="DetailViewController" customModule="PokeApi" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1BV-TN-doC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fVJ-xc-ldf">
+                                <rect key="frame" x="140" y="128" width="254" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="pJs-t6-cfw"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="23"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g31-iy-tWP" customClass="ImageSlideshow" customModule="ImageSlideshow">
+                                <rect key="frame" x="20" y="128" width="100" height="100"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="G8g-Bu-lYK"/>
+                                    <constraint firstAttribute="width" constant="100" id="VFW-39-3kj"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="uM3-fD-Huo"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="fVJ-xc-ldf" firstAttribute="leading" secondItem="g31-iy-tWP" secondAttribute="trailing" constant="20" id="5GU-5L-9A3"/>
+                            <constraint firstItem="uM3-fD-Huo" firstAttribute="trailing" secondItem="fVJ-xc-ldf" secondAttribute="trailing" constant="20" id="XG8-0s-aSZ"/>
+                            <constraint firstItem="g31-iy-tWP" firstAttribute="leading" secondItem="uM3-fD-Huo" secondAttribute="leading" constant="20" id="bAW-4P-CUo"/>
+                            <constraint firstItem="fVJ-xc-ldf" firstAttribute="top" secondItem="uM3-fD-Huo" secondAttribute="top" constant="40" id="ufx-fW-x3L"/>
+                            <constraint firstItem="g31-iy-tWP" firstAttribute="top" secondItem="uM3-fD-Huo" secondAttribute="top" constant="40" id="vkP-Dw-pdA"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="VHF-kx-Msg"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="imageSlideshow" destination="g31-iy-tWP" id="ma4-TM-l7L"/>
+                        <outlet property="pokemonNameLabel" destination="fVJ-xc-ldf" id="XbE-gj-2UD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bXx-fC-xAH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2024.6376811594205" y="137.94642857142856"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="uyy-kf-VoT">

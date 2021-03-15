@@ -9,6 +9,9 @@ target 'PokeApi' do
   pod 'Alamofire', '~> 5.2'
   pod 'Unrealm', :git => 'https://github.com/arturdev/Unrealm.git'
   pod 'SDWebImage', '~> 5.0'
+  pod 'Hero'
+  pod 'ImageSlideshow', '~> 1.9.0'
+  pod "ImageSlideshow/SDWebImage"
 
   target 'PokeApiTests' do
     inherit! :search_paths

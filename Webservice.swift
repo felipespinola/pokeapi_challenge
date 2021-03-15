@@ -39,23 +39,26 @@ class Webservices {
         }
     }
     
-    func getPokemon(url: String){
+    func getPokemon(url: String, completion: @escaping (Pokemon?) -> Void) {
         guard let url = URL(string: url) else {
             return
         }
         AF.request(url).responseJSON { response in
             guard let data = response.data else {
                 print("No data")
+                completion(nil)
                 return
             }
             
             do {
                 let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
+                completion(pokemon)
                 RealmSingleton.shared.realm.beginWrite()
                 RealmSingleton.shared.realm.add(pokemon, update: .all)
                 try RealmSingleton.shared.realm.commitWrite()
             } catch let error {
                 print("error: \(error)")
+                completion(nil)
             }
         }
     }
